@@ -1,36 +1,34 @@
-// C refreshers
+// Notes
 
-/* Operators */
-// << - left shift
-// >> - right shift
-
-/* VM-related notes */
-// Instruction set - PUSH, POP, ADD, SUB, MUL, DIV, AND, OR, XOR, NOT
-// 
-
+/* Example LC-3 Program */
+// .ORIG x3000          memory address of the program
+// .LEA R0, STRING  // Load effective address of STRING into R0
 
 #include <stdio.h>
 #include <stdint.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#include <signal.h>
+#include <Windows.h>
+#include <conio.h>  
 
-typedef enum { // Instruction set
-    INSTRUCTION_PUSH,
-    INSTRUCTION_POP,
-    INSTRUCTION_ADD,
-    INSTRUCTION_SUB,
-    INSTRUCTION_MUL,
-    INSTRUCTION_DIV,
-    INSTRUCTION_AND,
-    INSTRUCTION_OR,
-    INSTRUCTION_XOR,
-    INSTRUCTION_NOT,
-    INSTRUCTION_HALT,
-} Inst_set;
 
-/*typedef struct {
-    Inst_set instruction; 
-} Instruction;*/
+
+typedef enum { // Opcodes
+    OP_BR = 0, // Branch
+    OP_ADD,    // Add
+    OP_LD,     // Load
+    OP_ST,     // Store
+    OP_JSR,    // Jump to Subroutine
+    OP_AND,    // bitwise AND
+    OP_LDR,    // Load Register
+    OP_STR,    // Store Register
+    OP_NOT,    // bitwise NOT
+    OP_LDI,    // Load Indirect
+    OP_STI,    // Store Indirect
+    OP_JMP,    // Jump
+    OP_RES,    // Reserved
+    OP_LEA,    // Load Effective Address
+    OP_TRAP    // Trap
+} Opcodes;
 
 // RAM / Registers
 // Holds a single piece of data to be used by the CPU
@@ -46,17 +44,42 @@ typedef enum {
     REG_COND,// Condition register
 } Registers;
 
+typedef enum {
+    COND_POS = 1 << 0,
+    COND_ZERO = 1 << 1,
+    COND_NEG = 1 << 2,
+} Condition;
+
 
 #define memory_size (1 << 16) // size of memory (128 KB)
 uint16_t memory[memory_size]; // memory array
 
 uint16_t registers[8]; // Array for storing registers
 
-void load() { // load data from disk into memory
-    printf("Loading data...\n");
+
+// Methods
+void handle_interrupt(int signal)
+{
+    restore_input_buffering();
+    printf("\n");
+    exit(-2);
 }
 
+/* Procedure */
+// 1) Load an instruction from memory at the PC register's address
+// 2) Increment the PC register
+// 3) Determine the instruction to execute based on the opcode
+// 4) Perform the instruction using parameters from the instruction
+// 5) Back to step 1
 
-int main() { // main loop
+int main(int argc, const char* argv[]) { // main loop
+
+    signal(SIGINT, handle_interrupt);
+    disable_input_buffering();
+
+    enum start {
+        start = 0x3000 // default starting address for the program
+    };
+
     return 0;
 }
