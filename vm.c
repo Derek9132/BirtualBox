@@ -3,6 +3,7 @@
 /* Example LC-3 Program */
 // .ORIG x3000          memory address of the program
 // .LEA R0, STRING  // Load effective address of STRING into R0
+// 
 
 #include <stdio.h>
 #include <stdint.h>
@@ -76,6 +77,15 @@ int main(int argc, const char* argv[]) { // main loop
 
     signal(SIGINT, handle_interrupt);
     disable_input_buffering();
+
+    // Load arguments
+    if (argc < 2) {
+        exit(2);
+    }
+
+    for (int i = 1; i < argc; i++) {
+        
+    }
 
     enum start {
         start = 0x3000 // default starting address for the program
