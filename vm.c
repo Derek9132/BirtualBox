@@ -33,7 +33,7 @@ typedef enum { // Opcodes
 
 // RAM / Registers
 // Holds a single piece of data to be used by the CPU
-// 16-bit registers
+// 16-bit registers (10 count)
 typedef enum { 
     REG_A,
     REG_B,
@@ -41,6 +41,8 @@ typedef enum {
     REG_D,
     REG_E,
     REG_F,
+    REG_G,
+    REG_H,
     REG_PC, // Program Counter
     REG_COND,// Condition register
 } Registers;
@@ -66,6 +68,15 @@ void handle_interrupt(int signal)
     exit(-2);
 }
 
+void memory_write(uint16_t address, uint16_t value) {
+    memory[address] = value; // Writes a value to an address in memory
+}
+
+uint16_t memory_read(uint16_t address) {
+    return memory[address]; // Reads a value from an address in memory
+
+}
+
 /* Procedure */
 // 1) Load an instruction from memory at the PC register's address
 // 2) Increment the PC register
@@ -74,9 +85,6 @@ void handle_interrupt(int signal)
 // 5) Back to step 1
 
 int main(int argc, const char* argv[]) { // main loop
-
-    signal(SIGINT, handle_interrupt);
-    disable_input_buffering();
 
     // Load arguments
     if (argc < 2) {
@@ -87,9 +95,66 @@ int main(int argc, const char* argv[]) { // main loop
         
     }
 
-    enum start {
-        start = 0x3000 // default starting address for the program
-    };
+    signal(SIGINT, handle_interrupt);
+    disable_input_buffering();
+
+    registers[REG_COND] = COND_ZERO; // Initialize condition register to zero
+    registers[REG_PC] = 0x3000; // 0x3000 is the default starting address
+
+    int running = 1;
+    while (running) {
+        uint16_t instruction = memory_read(registers[REG_PC]++); // Fetch instruction and increment PC
+        uint16_t opcode = instruction >> 12; // Get the opcode
+
+        switch(opcode) {
+
+            case OP_ADD: {
+
+            }
+            case OP_LD: {
+
+            }
+            case OP_ST: {
+
+            }
+            case OP_JSR: {
+
+            }
+            case OP_AND: {
+
+            }
+            case OP_NOT: {
+
+            }
+            case OP_STR: {
+
+            }
+            case OP_LDR: {
+
+            }
+            case OP_LDI: {
+
+            }
+            case OP_STI: {
+
+            }
+            case OP_JMP: {
+                
+            }
+            case OP_RES: {
+
+            }
+            case OP_LEA: {
+
+            }
+            case OP_TRAP: {
+
+            }
+        }
+    }
+
 
     return 0;
 }
+
+// RIP Haru Urara
