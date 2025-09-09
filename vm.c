@@ -88,6 +88,7 @@ int main(int argc, const char* argv[]) { // main loop
 
     // Load arguments
     if (argc < 2) {
+        printf("lc3 [image-file1] ...\n");
         exit(2);
     }
 
@@ -109,7 +110,15 @@ int main(int argc, const char* argv[]) { // main loop
         switch(opcode) {
 
             case OP_ADD: {
+                // first 4 bits are Opcode
+                // next 3 bits indicates destination register (DR)
+                // next 3 bits is SR1, the register containing the 1st addend
 
+                // two modes: immediate(1) vs register(0)
+                // register mode: bits 3 and 4 are unused, bits 2-0 indicate register with 2nd addend
+                    // In Assembly: ADD R2 R1 R0 (add R1 and R0, store in R2)
+                // immediate mode: 2nd addend is stored in the instruction itself, bits 4-0, best for small numbers
+                    // In Assembly: ADD R0 R0 1 (add 1 to R0 and store back in R0)
             }
             case OP_LD: {
 
@@ -150,9 +159,13 @@ int main(int argc, const char* argv[]) { // main loop
             case OP_TRAP: {
 
             }
+            default: {
+                break;
+            }
         }
-    }
 
+        // Shut down
+    }
 
     return 0;
 }
